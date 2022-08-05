@@ -59,9 +59,3 @@ for i in range(10000):
         print("Label differences:")
         print(np.argmax(y_hat,axis=1) - iris.target)
         break
-
-
-
-
-
-
