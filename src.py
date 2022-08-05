@@ -15,7 +15,6 @@ def sigm(x):
 def d_sigm(x):
     return sigm(x) *(1-sigm(x))
 
-
 class NN():
     
     def __init__(self):
@@ -37,17 +36,16 @@ class NN():
         y_hat, s_j, a_j   = self.forward(x)
         loss = y - y_hat
 
-        d_k = loss                       
-        grads_w2 = np.dot(a_j.T, d_k)    
-
+        d_k = loss                         
         d_j = self.w2.dot(d_k.T).T * d_sigm(s_j)   
+        
         grads_w1 = np.dot(x.T,d_j)
+        grads_w2 = np.dot(a_j.T, d_k)  
 
         self.w1 += grads_w1 * self.lr
         self.w2 += grads_w2 * self.lr
 
         return y_hat, np.mean(loss)
-
 
 nn = NN()
 for i in range(10000):
