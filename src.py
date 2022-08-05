@@ -1,5 +1,4 @@
 import numpy as np
-
 from sklearn import datasets
 iris = datasets.load_iris()
 
@@ -16,36 +15,39 @@ def sigm(x):
 def d_sigm(x):
     return sigm(x) *(1-sigm(x))
 
+
 class NN():
     
     def __init__(self):
-        self.w1 = np.random.uniform(-1,1,size=(4, 20))
-        self.w2 = np.random.uniform(-1,1,size=(20, 3))
+        self.w1 = np.random.uniform(-1,1,size=(4, 10))
+        self.w2 = np.random.uniform(-1,1,size=(10, 3))
         self.lr = 0.001
         
     def forward(self, x):
         
-        h1 = np.dot(x, self.w1)
-        a_h1 = sigm(h1)
-        y_hat = np.dot(a_h1, self.w2)
+        s_j = np.dot(x, self.w1)
+        a_j = sigm(s_j)
+        s_k = np.dot(a_j, self.w2)
+        y_hat = s_k
 
-        return y_hat, h1, a_h1
+        return y_hat, s_j, a_j
 
     def backward(self,x):
         
-        y_hat, h1, a_h1   = self.forward(x)
+        y_hat, s_j, a_j   = self.forward(x)
         loss = y - y_hat
 
-        d_3 = loss                       # no derivation because of linear output
-        grads_w2 = np.dot(a_h1.T, d_3)    #grads = a_i * delta_k 
+        d_k = loss                       
+        grads_w2 = np.dot(a_j.T, d_k)    
 
-        d_2 = self.w2.dot(d_3.T).T * d_sigm(h1)   # d = f'(s)
-        grads_w1 = np.dot(x.T,d_2)
+        d_j = self.w2.dot(d_k.T).T * d_sigm(s_j)   
+        grads_w1 = np.dot(x.T,d_j)
 
         self.w1 += grads_w1 * self.lr
         self.w2 += grads_w2 * self.lr
 
         return y_hat, np.mean(loss)
+
 
 nn = NN()
 for i in range(10000):
@@ -57,3 +59,9 @@ for i in range(10000):
         print("Label differences:")
         print(np.argmax(y_hat,axis=1) - iris.target)
         break
+
+
+
+
+
+
